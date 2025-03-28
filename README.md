@@ -2,6 +2,41 @@
 
 This guide explains how to deploy a MongoDB replica set on three separate nodes running Docker. Each node will run a MongoDB container that mounts a local directory (hostPath) for data persistence. Although hostPath is not the ideal solution for production (network-attached storage is preferred), this guide demonstrates how to configure your environment when no other storage is available.
 
+```
+                      +------------------+
+                      |   Replica Set:   |
+                      |      rs0         |
+                      +------------------+
+
+                            (Primary)
+                         +-------------+
+                         |             |
+                         |  Node 1     |
+                         |  192.168.1.1|
+                         |  MongoDB    |
+                         |  Container  |
+                         +-------------+
+                               ▲
+                               |
+             +----------------+----------------+
+             |                                 |
+             |                                 |
+        (Secondary)                      (Secondary)
+     +-------------+                   +-------------+
+     |             |                   |             |
+     |  Node 2     |                   |  Node 3     |
+     | 192.168.1.2 |                   | 192.168.1.3 |
+     |  MongoDB    |                   |  MongoDB    |
+     |  Container  |                   |  Container  |
+     +-------------+                   +-------------+
+
+         All nodes:
+       - Run in Docker
+       - Use `/data/db` as host volume
+       - Expose port 27017
+       - Belong to replica set "rs0"
+```
+
 ---
 
 ## Prerequisites
